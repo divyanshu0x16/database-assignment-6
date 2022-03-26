@@ -13,6 +13,10 @@ app.config['MYSQL_DB'] = db['mysql_db']
 
 mysql = MySQL(app)
 
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('project.html')
+
 @app.route('/trains', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def trains():
     if request.method == 'GET':
@@ -21,22 +25,22 @@ def trains():
             trains = cur.fetchall()
         cur.close()
         print(trains)
-        return 'train get'
+        return render_template('project.html')
     elif request.method == 'POST':
         cur = mysql.connection.cursor()
 
-        #TODO: Take these values from a form
-        train_id = 12000
-        start_pt = 'AHM'
-        dest_pt = 'JAI'
-        arrival_time = '14:00:12'
-        dept_time = '13:22:12'
+        trainDetails = request.form
+        train_id = trainDetails['train_id']
+        start_pt = trainDetails['start_pt']
+        dest_pt = trainDetails['dest_pt']
+        arrival_time = trainDetails['arrival_time']
+        dept_time = trainDetails['dept_time']
 
         cur.execute("INSERT INTO train VALUES(%s, %s, %s, %s, %s)", (train_id, start_pt, dest_pt, arrival_time, dept_time))
         mysql.connection.commit()
         cur.close()
         
-        return 'train post'
+        return render_template('project.html')
 
     elif request.method == 'PUT':
         cur = mysql.connection.cursor()
@@ -65,7 +69,7 @@ def trains():
         cur.close()
 
         return 'train delete' 
-    return 0
+    return render_template('project.html')
 
 if __name__=="__main__":
     app.run(host=os.getenv('IP', '0.0.0.0'), 

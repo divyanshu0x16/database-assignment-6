@@ -1,0 +1,46 @@
+div#form {
+  font-family: sans-serif;
+  position: absolute;
+  top: 30%;
+  left:25%;
+}
+
+body {
+  background-image: url('dance hero.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+h1 {
+  text-align: right;
+  width: 300px;
+  color: brown;
+  font-family: serif;
+}
+
+label {
+  width: 400px;
+  display: inline-block;
+  text-align: right;
+  font-size: large;
+}
+
+#fname {
+  width: 300px;
+  font-size: large;
+}
+
+
+#min_box {
+  width: 70px;
+  text-align: left;
+  font-size: large;
+}
+
+
+#time_gap {
+  width: 605px;
+  display: inline-block;
+  text-align: right;
+  font-size: large;
+}
