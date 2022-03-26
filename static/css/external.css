@@ -1,7 +1,7 @@
 div#form {
   font-family: sans-serif;
   position: absolute;
-  top: 30%;
+  top: 20%;
   left:25%;
 }
 
@@ -43,4 +43,8 @@ label {
   display: inline-block;
   text-align: right;
   font-size: large;
+}
+
+#big_box{
+  width : 350px;
 }

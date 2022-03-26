@@ -15,7 +15,7 @@ mysql = MySQL(app)
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('project.html')
+    return render_template('vendors.html')
 
 @app.route('/trains', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def trains():
@@ -25,7 +25,7 @@ def trains():
             trains = cur.fetchall()
         cur.close()
         print(trains)
-        return render_template('project.html')
+        return render_template('trains.html')
     elif request.method == 'POST':
         cur = mysql.connection.cursor()
 
@@ -40,7 +40,7 @@ def trains():
         mysql.connection.commit()
         cur.close()
         
-        return render_template('project.html')
+        return render_template('trains.html')
 
     elif request.method == 'PUT':
         cur = mysql.connection.cursor()
@@ -69,8 +69,7 @@ def trains():
         cur.close()
 
         return 'train delete' 
-    return render_template('project.html')
-
+    return render_template('trains.html')
 if __name__=="__main__":
     app.run(host=os.getenv('IP', '0.0.0.0'), 
             port=int(os.getenv('PORT', 4444)), debug=True)
