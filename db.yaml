@@ -1,0 +1,5 @@
+mysql_host: '127.0.0.1'
+mysql_user: 'divyanshu'
+# Enter your password in field below
+mysql_password: 'Divyanshu'
+mysql_db: 'railway'
