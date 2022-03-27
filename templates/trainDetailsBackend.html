@@ -1,0 +1,40 @@
+{% block head %}
+<title>Task Master</title>
+{% endblock %}
+
+{% block body %}
+<div class="content"><center>
+    <h1 style="text-align: center">Task Master</h1>
+    {% if trains|length < 1 %}
+    <h4 style="text-align: center">There are no tasks. Create one below!</h4>
+    {% else %}
+    <form method="POST">
+    <table>
+        <tr>
+            <th>train_id</th>
+            <th>start_pt</th>
+            <th>dest_pt</th>
+            <th>arrival_time</th>
+            <th>dept_time</th>
+            <th>Operations</th>
+        </tr>
+        {% for train in trains %}
+            <tr>
+                <td>{{ train[0] }}</td>
+                <td>{{ train[1] }}</td>
+                <td>{{ train[2] }}</td>
+                <td>{{ train[3] }}</td>
+                <td>{{ train[4] }}</td>
+                <td>
+                    <a  name="train_id" href="trains.html">Delete</a>
+                    <br>
+                    <a href="/update/{{train.id}}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    </form>
+    {% endif %}
+</center>
+</div>
+{% endblock %}

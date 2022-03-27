@@ -15,26 +15,28 @@ mysql = MySQL(app)
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('vendors.html')
+    return render_template('trains.html')
 
 @app.route('/trains', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def trains():
     if request.method == 'GET':
-        cur = mysql.connection.cursor()
-        if( cur.execute("SELECT * FROM train") > 0 ):
-            trains = cur.fetchall()
-        cur.close()
-        print(trains)
+        # cur = mysql.connection.cursor()
+        # if( cur.execute("SELECT * FROM train") > 0 ):
+        #     trains = cur.fetchall()
+        # cur.close()
+        # print(trains)
         return render_template('trains.html')
+
+        
     elif request.method == 'POST':
         cur = mysql.connection.cursor()
 
-        trainDetails = request.form
-        train_id = trainDetails['train_id']
-        start_pt = trainDetails['start_pt']
-        dest_pt = trainDetails['dest_pt']
-        arrival_time = trainDetails['arrival_time']
-        dept_time = trainDetails['dept_time']
+        temp = request.form
+        train_id = temp['train_id']
+        start_pt = temp['start_pt']
+        dest_pt = temp['dest_pt']
+        arrival_time = temp['arrival_time']
+        dept_time = temp['dept_time']
 
         cur.execute("INSERT INTO train VALUES(%s, %s, %s, %s, %s)", (train_id, start_pt, dest_pt, arrival_time, dept_time))
         mysql.connection.commit()
@@ -70,6 +72,35 @@ def trains():
 
         return 'train delete' 
     return render_template('trains.html')
+
+@app.route('/trainDetailsBackend', methods=['GET', 'POST'])
+def traindetails():
+    if request.method == 'GET':
+        print("oks")
+        cur = mysql.connection.cursor()
+        if( cur.execute("SELECT * FROM train") > 0 ):
+            trains = cur.fetchall()
+        cur.close()
+        # print(trains)
+        return render_template('trainDetailsBackend.html', trains = trains)
+    elif request.method == 'POST':
+        print("ok1")
+        cur = mysql.connection.cursor()
+
+        #TODO: Take id from form
+        temp = request.form
+        train_id = temp['train_id']
+        print(train_id)
+        cur.execute("""DELETE FROM train WHERE train_id = %s""", (train_id,))
+        mysql.connection.commit()
+        cur.close()
+
+        return render_template('trainDetailsBackend.html', trains=trains)
+    # print("ok")
+    # return render_template("trains")
+
 if __name__=="__main__":
-    app.run(host=os.getenv('IP', '0.0.0.0'), 
-            port=int(os.getenv('PORT', 4444)), debug=True)
+    # app.run(host=os.getenv('IP', '0.0.0.0'), 
+    #         port=int(os.getenv('PORT', 4444)), debug=True)
+    app.run(debug=True)
+
