@@ -17,7 +17,17 @@ mysql = MySQL(app)
 def index():
     return render_template('index.html')
 
-@app.route('/trains', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/trains', methods=['GET', 'POST'])
+def traindetails():
+    if request.method == 'GET':
+        cur = mysql.connection.cursor()
+        if( cur.execute("SELECT * FROM train") > 0 ):
+            trains = cur.fetchall()
+        cur.close()
+        return render_template('/traindetails.html', trains = trains)
+    return render_template('/traindetails.html', trains=trains)
+
+@app.route('/trains/insert', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def trains():   
     if request.method == 'POST':
         cur = mysql.connection.cursor()
@@ -33,7 +43,7 @@ def trains():
         mysql.connection.commit()
         cur.close()
         
-        return redirect('/traindetails')
+        return redirect('/trains')
 
     elif request.method == 'PUT':
         cur = mysql.connection.cursor()
@@ -50,17 +60,7 @@ def trains():
         cur.close()
 
         return 'train put'
-    return render_template('trains.html')
-
-@app.route('/traindetails', methods=['GET', 'POST'])
-def traindetails():
-    if request.method == 'GET':
-        cur = mysql.connection.cursor()
-        if( cur.execute("SELECT * FROM train") > 0 ):
-            trains = cur.fetchall()
-        cur.close()
-        return render_template('/traindetails.html', trains = trains)
-    return render_template('/traindetails.html', trains=trains)
+    return render_template('trainform.html')
 
 @app.route('/trains/delete', methods=['GET', 'DELETE'])
 def delete_train():
@@ -77,7 +77,7 @@ def delete_train():
 
         cur.close()
 
-        return redirect("/traindetails")
+        return redirect("/trains")
 
 if __name__=="__main__":
     app.run(debug=True)
