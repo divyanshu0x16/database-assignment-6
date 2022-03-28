@@ -15,20 +15,11 @@ mysql = MySQL(app)
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('trains.html')
+    return render_template('index.html')
 
 @app.route('/trains', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def trains():
-    if request.method == 'GET':
-        # cur = mysql.connection.cursor()
-        # if( cur.execute("SELECT * FROM train") > 0 ):
-        #     trains = cur.fetchall()
-        # cur.close()
-        # print(trains)
-        return render_template('trains.html')
-
-        
-    elif request.method == 'POST':
+def trains():   
+    if request.method == 'POST':
         cur = mysql.connection.cursor()
 
         temp = request.form
@@ -42,7 +33,7 @@ def trains():
         mysql.connection.commit()
         cur.close()
         
-        return render_template('trains.html')
+        return redirect('/traindetails')
 
     elif request.method == 'PUT':
         cur = mysql.connection.cursor()
@@ -59,48 +50,35 @@ def trains():
         cur.close()
 
         return 'train put'
-
-    elif request.method == 'DELETE':
-        cur = mysql.connection.cursor()
-
-        #TODO: Take id from form
-        train_id = 12000
-
-        cur.execute("""DELETE FROM train WHERE train_id = %s""", (train_id,))
-        mysql.connection.commit()
-        cur.close()
-
-        return 'train delete' 
     return render_template('trains.html')
 
-@app.route('/trainDetailsBackend', methods=['GET', 'POST'])
+@app.route('/traindetails', methods=['GET', 'POST'])
 def traindetails():
     if request.method == 'GET':
-        print("oks")
         cur = mysql.connection.cursor()
         if( cur.execute("SELECT * FROM train") > 0 ):
             trains = cur.fetchall()
         cur.close()
-        # print(trains)
-        return render_template('trainDetailsBackend.html', trains = trains)
-    elif request.method == 'POST':
-        print("ok1")
+        return render_template('/traindetails.html', trains = trains)
+    return render_template('/traindetails.html', trains=trains)
+
+@app.route('/trains/delete', methods=['GET', 'DELETE'])
+def delete_train():
+    if request.method == 'GET':
         cur = mysql.connection.cursor()
 
-        #TODO: Take id from form
-        temp = request.form
-        train_id = temp['train_id']
-        print(train_id)
-        cur.execute("""DELETE FROM train WHERE train_id = %s""", (train_id,))
+        id = request.args.get('id')
+
+        cur.execute("""DELETE FROM train WHERE train_id = %s""", (id,))
         mysql.connection.commit()
+
+        if( cur.execute("SELECT * FROM train") > 0 ):
+            trains = cur.fetchall()
+
         cur.close()
 
-        return render_template('trainDetailsBackend.html', trains=trains)
-    # print("ok")
-    # return render_template("trains")
+        return redirect("/traindetails")
 
 if __name__=="__main__":
-    # app.run(host=os.getenv('IP', '0.0.0.0'), 
-    #         port=int(os.getenv('PORT', 4444)), debug=True)
     app.run(debug=True)
 
