@@ -28,40 +28,32 @@ def traindetails():
     return render_template('/train_details.html', trains=trains)
 
 @app.route('/trains/insert', methods=['GET', 'POST'])
-def trains():   
+def trains(): 
+    
+    id = request.args.get('id')
+
     if request.method == 'POST':
         cur = mysql.connection.cursor()
 
         temp = request.form
+
         train_id = temp['train_id']
+
         start_pt = temp['start_pt']
         dest_pt = temp['dest_pt']
         arrival_time = temp['arrival_time']
         dept_time = temp['dept_time']
 
-        cur.execute("INSERT INTO train VALUES(%s, %s, %s, %s, %s)", (train_id, start_pt, dest_pt, arrival_time, dept_time))
+        try:
+            cur.execute("INSERT INTO train VALUES(%s, %s, %s, %s, %s)", (train_id, start_pt, dest_pt, arrival_time, dept_time))
+        except:
+            cur.execute("UPDATE train SET train_id = %s, start_pt = %s, dest_pt = %s, arrival_time = %s, dept_time = %s WHERE train_id = %s", (train_id, start_pt, dest_pt, arrival_time, dept_time, train_id))
+
         mysql.connection.commit()
         cur.close()
         
         return redirect('/trains')
 
-    '''
-    elif request.method == 'PUT':
-        cur = mysql.connection.cursor()
-
-        #TODO: Take these values from a form
-        train_id = 12000
-        start_pt = 'GND'
-        dest_pt = 'JAI'
-        arrival_time = '14:00:12'
-        dept_time = '13:22:12'
-
-        cur.execute("UPDATE train SET train_id = %s, start_pt = %s, dest_pt = %s, arrival_time = %s, dept_time = %s WHERE train_id = %s", (train_id, start_pt, dest_pt, arrival_time, dept_time, train_id))
-        mysql.connection.commit()
-        cur.close()
-
-        return 'train put'
-    '''
     return render_template('train_form.html')
 
 @app.route('/trains/delete', methods=['GET'])
