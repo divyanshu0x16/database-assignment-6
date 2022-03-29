@@ -7,33 +7,53 @@
     {% if trains|length < 1 %}
     <h4 style="text-align: center">There are no trains. Add one below!</h4>
     {% else %}
-    <form method="POST">
-      <table>
-        <tr>
-          <th>train_id</th>
-          <th>start_pt</th>
-          <th>dest_pt</th>
-          <th>arrival_time</th>
-          <th>dept_time</th>
-          <th>Operations</th>
-        </tr>
-        {% for train in trains %}
-        <tr>
-          <td>{{ train[0] }}</td>
-          <td>{{ train[1] }}</td>
-          <td>{{ train[2] }}</td>
-          <td>{{ train[3] }}</td>
-          <td>{{ train[4] }}</td>
-          <td>
-            <a href="/trains/delete?id={{train[0]}}">Delete</a>
-            <br />
-            <a href="/trains/insert?id={{train[0]}}">Update</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
-    </form>
+    <table>
+      <tr>
+        <th>train_id</th>
+        <th>start_pt</th>
+        <th>dest_pt</th>
+        <th>arrival_time</th>
+        <th>dept_time</th>
+        <th>Operations</th>
+      </tr>
+      {% for train in trains %}
+      <tr>
+        <td>{{ train[0] }}</td>
+        <td>{{ train[1] }}</td>
+        <td>{{ train[2] }}</td>
+        <td>{{ train[3] }}</td>
+        <td>{{ train[4] }}</td>
+        <td>
+          <a href="/trains/delete?id={{train[0]}}">Delete</a>
+          <br />
+          <a href="/trains/insert?id={{train[0]}}">Update</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
     {% endif %}
+
+    <h1 style="text-align: center">Schedule</h1>
+    {% if trains|length < 1 %}
+    <h4 style="text-align: center">There are no trains</h4>
+    {% else %}
+    <table>
+      <tr>
+        <th>train_id</th>
+        <th>arrival_day</th>
+        <th>platform</th>
+      </tr>
+      {% for i in schedule %}
+      <tr>
+        <td>{{ i[0] }}</td>
+        <td>{{ i[1] }}</td>
+        <td>{{ i[2] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+
+    <br />
     <form method="get" action="/trains/insert">
       <button type="submit">Insert Train</button>
     </form>

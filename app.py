@@ -21,11 +21,15 @@ def index():
 def traindetails():
     if request.method == 'GET':
         cur = mysql.connection.cursor()
+        trains = []
+        schedule = []
         if( cur.execute("SELECT * FROM train") > 0 ):
             trains = cur.fetchall()
+        if( cur.execute("SELECT * FROM train_schedule") > 0):
+            schedule = cur.fetchall()
         cur.close()
-        return render_template('/train_details.html', trains = trains)
-    return render_template('/train_details.html', trains=trains)
+        return render_template('/train_details.html', trains = trains, schedule = schedule)
+    return render_template('/train_details.html', trains=trains, schedule = schedule)
 
 @app.route('/trains/insert', methods=['GET', 'POST'])
 def trains(): 
@@ -44,10 +48,15 @@ def trains():
         arrival_time = temp['arrival_time']
         dept_time = temp['dept_time']
 
+        day = temp['day']
+        platform = temp['platform']
+
         try:
             cur.execute("INSERT INTO train VALUES(%s, %s, %s, %s, %s)", (train_id, start_pt, dest_pt, arrival_time, dept_time))
+            cur.execute("INSERT INTO train_schedule VALUES(%s, %s, %s)", (train_id, day, platform))
         except:
             cur.execute("UPDATE train SET train_id = %s, start_pt = %s, dest_pt = %s, arrival_time = %s, dept_time = %s WHERE train_id = %s", (train_id, start_pt, dest_pt, arrival_time, dept_time, train_id))
+            cur.execute("UPDATE train_schedule SET train_id = %s, arrival_day = %s, platform = %s WHERE train_id = %s", (train_id, day, platform, train_id))
 
         mysql.connection.commit()
         cur.close()
