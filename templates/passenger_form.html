@@ -1,0 +1,110 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale-1.0" />
+    <link rel="stylesheet" href="../static/css/external.css" type="text/css" />
+  </head>
+
+  <body>
+    <div id="form" style="top: 10%">
+      <form method="POST">
+        <h1>Passenger details</h1>
+        <label for="fname">First Name: </label
+        ><input
+          type="text"
+          id="fname"
+          name="first_name"
+          placeholder="Enter your first name here"
+          autofocus
+          required
+        />
+        <br /><br />
+        <label for="fname">Last Name: </label
+        ><input
+          type="text"
+          id="fname"
+          name="last_name"
+          placeholder="Enter your last name here"
+          autofocus
+          required
+        />
+        <br /><br />
+        <div id="time_gap">
+          date_of_birth:
+          <input type="text" id="medium_box" name="dob" autofocus required />
+        </div>
+        <br /><br />
+        <div id="time_gap">
+          Aadhar:
+          <input type="text" id="medium_box" name="aadhar" autofocus required />
+        </div>
+        <br /><br />
+
+        <h1>Transaction details</h1>
+        <div id="time_gap">
+          Transaction id:
+          <input
+            type="text"
+            id="medium_box"
+            name="trans_id"
+            autofocus
+            required
+          />
+          mode of payment:
+          <input
+            type="text"
+            id="min_box"
+            name="mode_of_payment"
+            autofocus
+            required
+          />
+        </div>
+        <br /><br />
+        <div id="time_gap">
+          Date of payment:
+          <input
+            type="text"
+            id="medium_box"
+            name="date_of_payment"
+            autofocus
+            required
+          />
+          amount:
+          <input type="text" id="min_box" name="amount" autofocus required />
+        </div>
+        <br /><br />
+
+        <h1>Ticket details</h1>
+        <div id="time_gap">
+          train_id:
+          <input
+            type="text"
+            id="min_box"
+            name="train_id"
+            autofocus
+            required
+          />seat no.
+          <input type="text" id="min_box" name="seat_no" autofocus required />
+          coach:
+          <input type="text" id="min_box" name="coach" autofocus required />
+          status:
+          <input type="text" id="min_box" name="status" autofocus required />
+        </div>
+        <br /><br />
+        <div id="time_gap">
+          date of tavel:
+          <input
+            type="text"
+            id="medium_box"
+            name="date_of_travel"
+            autofocus
+            required
+          />
+        </div>
+        <br /><br />
+
+        <label for="submit"></label><input type="submit" value="submit" />
+        <input type="reset" value="Reset" /> <br /><br />
+      </form>
+    </div>
+  </body>
+</html>

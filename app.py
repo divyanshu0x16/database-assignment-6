@@ -82,6 +82,81 @@ def delete_train():
 
         return redirect("/trains")
 
+#Code For Passengers
+@app.route('/passengers', methods=['GET'])
+def passengerdetails():
+    if request.method == 'GET':
+        cur = mysql.connection.cursor()
+        passengers = []
+        transactions=[]
+        tickets=[]
+        if( cur.execute("SELECT * FROM passenger") > 0 ):
+            passengers = cur.fetchall()
+        if( cur.execute("SELECT * FROM transact") > 0 ):
+            transactions = cur.fetchall()
+        if( cur.execute("SELECT * FROM ticket") > 0 ):
+            tickets = cur.fetchall()
+        cur.close()
+        return render_template('/passenger_details.html', passengers=passengers,transactions=transactions,tickets=tickets)
+    return render_template('/passenger_details.html', passengers=passengers,transactions=transactions,tickets=tickets)
+
+@app.route('/passenger/insert', methods=['GET', 'POST'])
+def passengers(): 
+    
+    id = request.args.get('aadhar_no')
+
+    if request.method == 'POST':
+        cur = mysql.connection.cursor()
+
+        temp = request.form
+
+        first_name= temp['first_name']
+        last_name= temp['last_name']
+        dob= temp['dob']
+        aadhar= temp['aadhar']
+        
+        transaction_id= temp['trans_id']
+        mode_of_payment= temp['mode_of_payment']
+        date_of_payment= temp['date_of_payment']
+        amount= temp['amount']
+        
+        train_id= temp['train_id']
+        seat_no= temp['seat_no']
+        coach= temp['coach']
+        status= temp['status']
+        dot= temp['date_of_travel']
+
+        try:
+            cur.execute("INSERT INTO passenger VALUES(%s, %s, %s, %s)", (aadhar, first_name, last_name, dob))
+            cur.execute("INSERT INTO transact VALUES(%s, %s, %s,%s)", (transaction_id,mode_of_payment,amount,date_of_payment))
+            cur.execute("INSERT INTO ticket VALUES(%s, %s, %s,%s, %s, %s, %s)", (aadhar, train_id, transaction_id, seat_no, coach, status, dot))
+        except:
+            cur.execute("UPDATE ticket SET aadhar_no = %s, train_id = %s, transaction_id = %s, seat_no = %s, coach_no = %s,ticket_status=%s,date_of_travel=%s WHERE aadhar_no = %s", (aadhar,train_id,transaction_id,seat_no,coach,status,dot,aadhar))
+            cur.execute("UPDATE transact SET transaction_id = %s, mode_of_payment = %s, amount = %s,date_of_payment=%s WHERE transaction_id = %s", (transaction_id,mode_of_payment,amount,date_of_payment,transaction_id))
+            cur.execute("UPDATE passenger SET aadhar_no = %s, first_name = %s, last_name = %s,dob=%s WHERE aadhar_no = %s", (aadhar, first_name, last_name, dob,aadhar))
+
+        mysql.connection.commit()
+        cur.close()
+        
+        return redirect('/passengers')
+
+    return render_template('passenger_form.html')
+
+@app.route('/passenger/delete', methods=['GET'])
+def delete_passenger():
+    if request.method == 'GET':
+        cur = mysql.connection.cursor()
+
+        id = request.args.get('id')
+        print(id)
+
+        cur.execute("""DELETE FROM passenger WHERE aadhar_no = %s""", (id,))
+        mysql.connection.commit()
+
+        cur.close()
+
+        return redirect("/passenger_form")
+
 if __name__=="__main__":
     app.run(debug=True)
 
