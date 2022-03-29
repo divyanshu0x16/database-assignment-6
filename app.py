@@ -82,6 +82,97 @@ def delete_train():
 
         return redirect("/trains")
 
+@app.route('/staff', methods=['GET'])
+def staffdetails():
+    if request.method == 'GET':
+        cur = mysql.connection.cursor()
+        staff = []
+        worker = []
+        worker_phone = []
+        
+        # if( cur.execute("select * from worker natural join staff") > 0 ):
+            # staff = cur.fetchall()
+        
+        if( cur.execute("SELECT * FROM staff") > 0 ):
+            staff = cur.fetchall()
+        
+        if( cur.execute("SELECT * FROM worker") > 0 ):
+            worker = cur.fetchall()
+        
+        if( cur.execute("SELECT * FROM worker_phone") > 0 ):
+            worker_phone = cur.fetchall()
+        
+        cur.close()
+        
+        return render_template('/staff_details.html', staff=staff, worker=worker, worker_phone=worker_phone)
+    return render_template('/staff_details.html', staff=staff, worker=worker, worker_phone=worker_phone)
+
+@app.route('/staff/insert', methods=['GET', 'POST'])
+def staff(): 
+    
+    id = request.args.get('id')
+
+    if request.method == 'POST':
+        cur = mysql.connection.cursor()
+
+        temp = request.form
+
+        worker_id = temp['worker_id']
+        first_name = temp['first_name']
+        last_name = temp['last_name']
+        age_at_joining = temp['age_at_joining']
+        date_of_joining = temp['date_of_joining']
+        picture = temp['picture']
+
+        phone_no = temp['phone_no']
+        phone_no = list(map(int, phone_no.split()))
+
+        salary = temp['salary']
+        of_no = temp['of_no']
+        staff_class = temp['staff_class']
+
+        try:
+            cur.execute("INSERT INTO worker VALUES(%s, %s, %s, %s, %s, %s)", (worker_id, first_name, last_name, age_at_joining, date_of_joining, picture))
+            cur.execute("INSERT INTO staff VALUES(%s, %s, %s, %s)", (worker_id, salary, of_no, staff_class))
+            for phone in phone_no:
+                cur.execute("INSERT INTO worker_phone VALUES(%s, %s)", (phone, worker_id))
+        
+        except Exception as e:
+            if e.args[1][:15] != "Duplicate entry":
+                print(e.args[1][:15])
+                raise
+            cur.execute("UPDATE worker SET worker_id = %s, first_name = %s, last_name = %s, age_at_joining = %s, date_at_joining = %s, picture = %s WHERE worker_id = %s", (worker_id, first_name, last_name, age_at_joining, date_of_joining, picture, worker_id))
+            cur.execute("UPDATE staff SET worker_id = %s, salary = %s, of_no = %s, class = %s WHERE worker_id = %s", (worker_id, salary, of_no, staff_class, worker_id))
+            
+            # first delete all then add new numbers
+            cur.execute("""DELETE FROM worker_phone WHERE worker_id = %s""", (id,))
+            for phone in phone_no:
+                cur.execute("INSERT INTO worker_phone VALUES(%s, %s)", (phone, worker_id))
+
+        mysql.connection.commit()
+        cur.close()
+        
+        return redirect('/staff')
+
+    return render_template('staff_form.html')
+
+@app.route('/staff/delete', methods=['GET'])
+def delete_staff():
+    if request.method == 'GET':
+        cur = mysql.connection.cursor()
+
+        id = request.args.get('id')
+
+        cur.execute("""DELETE FROM staff WHERE worker_id = %s""", (id,))
+        mysql.connection.commit()
+
+        if( cur.execute("SELECT * FROM staff") > 0 ):
+            staff = cur.fetchall()
+
+        cur.close()
+
+        return redirect("/staff")
+
 #Code For Passengers
 @app.route('/passengers', methods=['GET'])
 def passengerdetails():
