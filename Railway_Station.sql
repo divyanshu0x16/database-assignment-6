@@ -336,7 +336,6 @@ CREATE TABLE `worker` (
 
 LOCK TABLES `worker` WRITE;
 /*!40000 ALTER TABLE `worker` DISABLE KEYS */;
-INSERT INTO `worker` VALUES (1234,'Rithik','Mal',19,'2022-02-02',_binary 'JK');
 /*!40000 ALTER TABLE `worker` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -348,7 +347,7 @@ DROP TABLE IF EXISTS `worker_phone`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `worker_phone` (
-  `phone_no` int NOT NULL,
+  `phone_no` varchar(255) NOT NULL,
   `worker_id` int NOT NULL,
   PRIMARY KEY (`phone_no`),
   KEY `fk_worker` (`worker_id`),
@@ -362,7 +361,6 @@ CREATE TABLE `worker_phone` (
 
 LOCK TABLES `worker_phone` WRITE;
 /*!40000 ALTER TABLE `worker_phone` DISABLE KEYS */;
-INSERT INTO `worker_phone` VALUES (92468,1234);
 /*!40000 ALTER TABLE `worker_phone` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -375,4 +373,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-30 22:21:57
+-- Dump completed on 2022-03-31  0:20:43

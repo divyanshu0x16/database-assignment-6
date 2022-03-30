@@ -126,7 +126,8 @@ def staff():
         picture = temp['picture']
 
         phone_no = temp['phone_no']
-        phone_no = list(map(int, phone_no.split()))
+        phone_no = phone_no.split()
+
 
         salary = temp['salary']
         of_no = temp['of_no']
@@ -135,6 +136,7 @@ def staff():
         try:
             cur.execute("INSERT INTO worker VALUES(%s, %s, %s, %s, %s, %s)", (worker_id, first_name, last_name, age_at_joining, date_of_joining, picture))
             cur.execute("INSERT INTO staff VALUES(%s, %s, %s, %s)", (worker_id, salary, of_no, staff_class))
+            mysql.connection.commit()
             for phone in phone_no:
                 cur.execute("INSERT INTO worker_phone VALUES(%s, %s)", (phone, worker_id))
         
@@ -144,9 +146,10 @@ def staff():
                 raise
             cur.execute("UPDATE worker SET worker_id = %s, first_name = %s, last_name = %s, age_at_joining = %s, date_at_joining = %s, picture = %s WHERE worker_id = %s", (worker_id, first_name, last_name, age_at_joining, date_of_joining, picture, worker_id))
             cur.execute("UPDATE staff SET worker_id = %s, salary = %s, of_no = %s, class = %s WHERE worker_id = %s", (worker_id, salary, of_no, staff_class, worker_id))
-            
+            mysql.connection.commit()
             # first delete all then add new numbers
             cur.execute("""DELETE FROM worker_phone WHERE worker_id = %s""", (id,))
+            mysql.connection.commit()
             for phone in phone_no:
                 cur.execute("INSERT INTO worker_phone VALUES(%s, %s)", (phone, worker_id))
 
@@ -164,7 +167,7 @@ def delete_staff():
 
         id = request.args.get('id')
 
-        cur.execute("""DELETE FROM staff WHERE worker_id = %s""", (id,))
+        cur.execute("""DELETE FROM worker WHERE worker_id = %s""", (id,))
         mysql.connection.commit()
 
         if( cur.execute("SELECT * FROM staff") > 0 ):
