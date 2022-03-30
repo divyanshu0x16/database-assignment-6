@@ -71,8 +71,9 @@ def delete_train():
         cur = mysql.connection.cursor()
 
         id = request.args.get('id')
-
+        cur.execute("""DELETE FROM passenger WHERE aadhar_no in (SELECT aadhar_no FROM ticket WHERE train_id = %s)""", (id,))
         cur.execute("""DELETE FROM train WHERE train_id = %s""", (id,))
+        
         mysql.connection.commit()
 
         if( cur.execute("SELECT * FROM train") > 0 ):
@@ -219,7 +220,7 @@ def passengers():
 
         try:
             cur.execute("INSERT INTO passenger VALUES(%s, %s, %s, %s)", (aadhar, first_name, last_name, dob))
-            cur.execute("INSERT INTO transact VALUES(%s, %s, %s,%s)", (transaction_id,mode_of_payment,amount,date_of_payment))
+            cur.execute("INSERT INTO transact VALUES(%s, %s, %s,%s,%s)", (transaction_id,mode_of_payment,amount,date_of_payment,aadhar))
             cur.execute("INSERT INTO ticket VALUES(%s, %s, %s,%s, %s, %s, %s)", (aadhar, train_id, transaction_id, seat_no, coach, status, dot))
         except:
             cur.execute("UPDATE ticket SET aadhar_no = %s, train_id = %s, transaction_id = %s, seat_no = %s, coach_no = %s,ticket_status=%s,date_of_travel=%s WHERE aadhar_no = %s", (aadhar,train_id,transaction_id,seat_no,coach,status,dot,aadhar))
@@ -240,13 +241,15 @@ def delete_passenger():
 
         id = request.args.get('id')
         print(id)
-
+        cur.execute("""DELETE FROM ticket WHERE aadhar_no = %s""", (id,))
+        cur.execute("""DELETE FROM transact WHERE aadhar_no = %s""", (id,))
         cur.execute("""DELETE FROM passenger WHERE aadhar_no = %s""", (id,))
         mysql.connection.commit()
+        
 
         cur.close()
 
-        return redirect("/passenger_form")
+        return redirect("/passengers")
 
 if __name__=="__main__":
     app.run(debug=True)

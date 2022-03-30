@@ -1,87 +1,87 @@
-{% block head %}
-<title>Task Master</title>
-{% endblock %} {% block body %}
-<div class="content">
-  <center>
-    <h1 style="text-align: center">Passenger Details</h1>
-    {% if passengers|length < 1 %}
-    <h4 style="text-align: center">There are no passengers. Add one below!</h4>
-    {% else %}
-    <table>
-      <tr>
-        <th>aadhar_no</th>
-        <th>first_name</th>
-        <th>last_name</th>
-        <th>dob</th>
-      </tr>
-      {% for passenger in passengers %}
-      <tr>
-        <td>{{ passenger[0] }}</td>
-        <td>{{ passenger[1] }}</td>
-        <td>{{ passenger[2] }}</td>
-        <td>{{ passenger[3] }}</td>
-        <td>
-          <a href="/passenger/delete?id={{passenger[0]}}">Delete</a>
-          <br />
-          <a href="/passenger/insert?id={{passenger[0]}}">Update</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% endif %}
+<body class="content" style="background-color:rgb(241, 215, 143);">
+    {% block head %} {% endblock %} {% block body %}
+    <center>
+        <h1 style=" text-align: center ">Passenger Details</h1>
+        {% if passengers|length
+        < 1 %} <h4 style="text-align: center ">There are no passengers. Add one below!</h4>
+            {% else %}
+            <table border="1 ">
+                <tr>
+                    <th>aadhar_no</th>
+                    <th>first_name</th>
+                    <th>last_name</th>
+                    <th>dob</th>
+                </tr>
+                {% for passenger in passengers %}
+                <tr>
+                    <td>{{ passenger[0] }}</td>
+                    <td>{{ passenger[1] }}</td>
+                    <td>{{ passenger[2] }}</td>
+                    <td>{{ passenger[3] }}</td>
+                    <td>
+                        <a href="/passenger/delete?id={{passenger[0]}} ">Delete</a>
+                        <br />
+                        <a href="/passenger/insert?id={{passenger[0]}} ">Update</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
 
-    <h1 style="text-align: center">Transactions</h1>
-    {% if transactions|length < 1 %}
-    <h4 style="text-align: center">There are no transactions</h4>
-    {% else %}
-    <table>
-      <tr>
-        <th>transaction id</th>
-        <th>mode of payment</th>
-        <th>amount</th>
-        <th>Date of payment</th>
-      </tr>
-      {% for i in transactions %}
-      <tr>
-        <td>{{ i[0] }}</td>
-        <td>{{ i[1] }}</td>
-        <td>{{ i[2] }}</td>
-        <td>{{ i[3] }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% endif %}
-    <h1 style="text-align: center">Ticket Details</h1>
-    {% if tickets|length < 1 %}
-    <h4 style="text-align: center">There are no tickets</h4>
-    {% else %}
-    <table>
-      <tr>
-        <th>aadhar_no</th>
-        <th>train_id</th>
-        <th>transaction_id</th>
-        <th>seat_no</th>
-        <th>coach_no</th>
-        <th>ticket_status</th>
-        <th>date_of_travel</th>
-      </tr>
-      {% for i in tickets %}
-      <tr>
-        <td>{{ i[0] }}</td>
-        <td>{{ i[1] }}</td>
-        <td>{{ i[2] }}</td>
-        <td>{{ i[3] }}</td>
-        <td>{{ i[4] }}</td>
-        <td>{{ i[5] }}</td>
-        <td>{{ i[6] }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% endif %}
-    <br />
-    <form method="get" action="/passenger/insert">
-      <button type="submit">Insert Passenger</button>
-    </form>
-  </center>
-</div>
+            <h1 style="text-align: center ">Transactions</h1>
+            {% if transactions|length
+            < 1 %} <h4 style="text-align: center ">There are no transactions</h4>
+                {% else %}
+                <table border="1 ">
+                    <tr>
+                        <th>transaction_id</th>
+                        <th>mode of payment</th>
+                        <th>amount</th>
+                        <th>Date_of_payment</th>
+                        <th>aadhar_no</th>
+                    </tr>
+                    {% for i in transactions %}
+                    <tr>
+                        <td>{{ i[0] }}</td>
+                        <td>{{ i[1] }}</td>
+                        <td>{{ i[2] }}</td>
+                        <td>{{ i[3] }}</td>
+                        <td>{{ i[4] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+                <h1 style="text-align: center ">Ticket Details</h1>
+                {% if tickets|length
+                < 1 %} <h4 style="text-align: center ">There are no tickets</h4>
+                    {% else %}
+                    <table border="1 ">
+                        <tr>
+                            <th>aadhar_no</th>
+                            <th>train_id</th>
+                            <th>transaction_id</th>
+                            <th>seat_no</th>
+                            <th>coach_no</th>
+                            <th>ticket_status</th>
+                            <th>date_of_travel</th>
+                        </tr>
+                        {% for i in tickets %}
+                        <tr>
+                            <td>{{ i[0] }}</td>
+                            <td>{{ i[1] }}</td>
+                            <td>{{ i[2] }}</td>
+                            <td>{{ i[3] }}</td>
+                            <td>{{ i[4] }}</td>
+                            <td>{{ i[5] }}</td>
+                            <td>{{ i[6] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+                    <br />
+                    <form method="get " action="/passenger/insert ">
+                        <button type="submit ">Insert Passenger</button>
+                    </form>
+    </center>
+</body>
 {% endblock %}

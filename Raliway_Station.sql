@@ -1,6 +1,6 @@
--- MySQL dump 10.13  Distrib 8.0.27, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
 --
--- Host: localhost    Database: railway
+-- Host: localhost    Database: assignment6
 -- ------------------------------------------------------
 -- Server version	8.0.27
 
@@ -37,6 +37,7 @@ CREATE TABLE `passenger` (
 
 LOCK TABLES `passenger` WRITE;
 /*!40000 ALTER TABLE `passenger` DISABLE KEYS */;
+INSERT INTO `passenger` VALUES (123456678,'Rithik','Maligi','2001-03-07'),(123456679,'Divyanshu','Meena','2002-04-08'),(123456680,'Harsha','Vardhan','2002-05-10');
 /*!40000 ALTER TABLE `passenger` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -134,9 +135,9 @@ CREATE TABLE `ticket` (
   PRIMARY KEY (`aadhar_no`,`train_id`,`transaction_id`),
   KEY `train_id` (`train_id`),
   KEY `transaction_id` (`transaction_id`),
-  CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`train_id`) REFERENCES `train` (`train_id`),
-  CONSTRAINT `ticket_ibfk_2` FOREIGN KEY (`aadhar_no`) REFERENCES `passenger` (`aadhar_no`),
-  CONSTRAINT `ticket_ibfk_3` FOREIGN KEY (`transaction_id`) REFERENCES `transact` (`transaction_id`)
+  CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transact` (`transaction_id`) ON DELETE CASCADE,
+  CONSTRAINT `ticket_ibfk_2` FOREIGN KEY (`aadhar_no`) REFERENCES `passenger` (`aadhar_no`) ON DELETE CASCADE,
+  CONSTRAINT `ticket_ibfk_3` FOREIGN KEY (`train_id`) REFERENCES `train` (`train_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -146,6 +147,7 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
+INSERT INTO `ticket` VALUES (123456678,12344,1234,5,'6','Cancelled','2022-03-10'),(123456679,12345,1235,9,'2','On-Time','2022-04-12'),(123456680,12346,1236,35,'4','Delay','2021-04-12');
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,6 +174,7 @@ CREATE TABLE `train` (
 
 LOCK TABLES `train` WRITE;
 /*!40000 ALTER TABLE `train` DISABLE KEYS */;
+INSERT INTO `train` VALUES (12344,'Kol','Amd','22:00:00','22:10:00'),(12345,'Kol','Amd','13:25:00','13:26:00'),(12346,'Banglore','Jaipur','17:00:00','17:03:00');
 /*!40000 ALTER TABLE `train` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -223,6 +226,7 @@ CREATE TABLE `train_schedule` (
 
 LOCK TABLES `train_schedule` WRITE;
 /*!40000 ALTER TABLE `train_schedule` DISABLE KEYS */;
+INSERT INTO `train_schedule` VALUES (12344,'Tuesday',4),(12345,'Saturday',2),(12346,'Monday',1);
 /*!40000 ALTER TABLE `train_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -238,7 +242,10 @@ CREATE TABLE `transact` (
   `mode_of_payment` varchar(255) NOT NULL,
   `amount` int NOT NULL,
   `date_of_payment` date NOT NULL,
-  PRIMARY KEY (`transaction_id`)
+  `aadhar_no` int DEFAULT NULL,
+  PRIMARY KEY (`transaction_id`),
+  KEY `aadhar_no` (`aadhar_no`),
+  CONSTRAINT `transact_ibfk_1` FOREIGN KEY (`aadhar_no`) REFERENCES `passenger` (`aadhar_no`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -248,6 +255,7 @@ CREATE TABLE `transact` (
 
 LOCK TABLES `transact` WRITE;
 /*!40000 ALTER TABLE `transact` DISABLE KEYS */;
+INSERT INTO `transact` VALUES (1234,'Online',120,'2022-03-03',123456678),(1235,'Online',1330,'2022-04-08',123456679),(1236,'Offline',250,'2021-03-08',123456680);
 /*!40000 ALTER TABLE `transact` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -328,6 +336,7 @@ CREATE TABLE `worker` (
 
 LOCK TABLES `worker` WRITE;
 /*!40000 ALTER TABLE `worker` DISABLE KEYS */;
+INSERT INTO `worker` VALUES (1234,'Rithik','Mal',19,'2022-02-02',_binary 'JK');
 /*!40000 ALTER TABLE `worker` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -353,6 +362,7 @@ CREATE TABLE `worker_phone` (
 
 LOCK TABLES `worker_phone` WRITE;
 /*!40000 ALTER TABLE `worker_phone` DISABLE KEYS */;
+INSERT INTO `worker_phone` VALUES (92468,1234);
 /*!40000 ALTER TABLE `worker_phone` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -365,4 +375,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-26 12:29:09
+-- Dump completed on 2022-03-30 21:02:11
