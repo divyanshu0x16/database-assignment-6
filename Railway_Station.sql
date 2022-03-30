@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.27, for Linux (x86_64)
 --
 -- Host: localhost    Database: assignment6
 -- ------------------------------------------------------
@@ -352,7 +352,7 @@ CREATE TABLE `worker_phone` (
   `worker_id` int NOT NULL,
   PRIMARY KEY (`phone_no`),
   KEY `fk_worker` (`worker_id`),
-  CONSTRAINT `fk_worker` FOREIGN KEY (`worker_id`) REFERENCES `worker` (`worker_id`)
+  CONSTRAINT `fk_worker` FOREIGN KEY (`worker_id`) REFERENCES `worker` (`worker_id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -375,4 +375,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-30 21:02:11
+-- Dump completed on 2022-03-30 22:21:57
