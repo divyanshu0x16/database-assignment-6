@@ -1,0 +1,117 @@
+<body class="content" style="background-color:rgb(193, 169, 214);">
+    {% block head %} {% endblock %} {% block body %}
+    <center>
+        <h1 style="text-align: center">Vendor Details</h1>
+        {% if vendors|length
+        < 1 %} <h4 style="text-align: center">There are no Vendors. Add one below!</h4>
+            {% else %}
+            <table border="1 ">
+                <tr>
+                    <th>worker_id</th>
+                    <th>job</th>
+                    <th>num_employees</th>
+                </tr>
+                {% for vendor in vendors %}
+                <tr>
+                    <td>{{ vendor[0] }}</td>
+                    <td>{{ vendor[1] }}</td>
+                    <td>{{ vendor[2] }}</td>
+                    <td>
+                        <a href="/vendors/delete?id={{vendor[0]}}">Delete</a>
+                        <br />
+                        <a href="/vendors/insert?id={{vendor[0]}}">Update</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+
+            <h1 style="text-align: center">Worker</h1>
+            {% if workers|length
+            < 1 %} <h4 style="text-align: center">There are no workers</h4>
+                {% else %}
+                <table border="1 ">
+                    <tr>
+                        <th>worker_id</th>
+                        <th>first_name</th>
+                        <th>last_name</th>
+                        <th>age_of_joining</th>
+                        <th>date_of_joining</th>
+                        <th>picture</th>
+                    </tr>
+                    {% for i in workers %}
+                    <tr>
+                        <td>{{ i[0] }}</td>
+                        <td>{{ i[1] }}</td>
+                        <td>{{ i[2] }}</td>
+                        <td>{{ i[3] }}</td>
+                        <td>{{ i[4] }}</td>
+                        <td>{{ i[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+
+                <h1 style="text-align: center">Worker_phone</h1>
+                {% if worker_phones|length
+                < 1 %} <h4 style="text-align: center">There are no workers</h4>
+                    {% else %}
+                    <table border="1 ">
+                        <tr>
+                            <th>phone_no</th>>
+                            <th>worker_id</th>
+                        </tr>
+                        {% for i in worker_phones %}
+                        <tr>
+                            <td>{{ i[0] }}</td>
+                            <td>{{ i[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+
+                    <h1 style="text-align: center">Stalls</h1>
+                    {% if stalls|length
+                    < 1 %} <h4 style="text-align: center">There are no stalls</h4>
+                        {% else %}
+                        <table border="1 ">
+                            <tr>
+                                <th>stall_id</th>>
+                                <th>stall_name</th>
+                                <th>platform_no</th>
+                            </tr>
+                            {% for i in stalls %}
+                            <tr>
+                                <td>{{ i[0] }}</td>
+                                <td>{{ i[1] }}</td>
+                                <td>{{ i[2] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        {% endif %}
+
+                        <h1 style="text-align: center">Stall Owners</h1>
+                        {% if stall_owners|length
+                        < 1 %} <h4 style="text-align: center">There are no stalls</h4>
+                            {% else %}
+                            <table border="1 ">
+                                <tr>
+                                    <th>worker_id</th>>
+                                    <th>stall_id</th>
+                                </tr>
+                                {% for i in stall_owners %}
+                                <tr>
+                                    <td>{{ i[0] }}</td>
+                                    <td>{{ i[1] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                            {% endif %}
+
+                            <br />
+                            <form method="get" action="/vendors/insert">
+                                <button type="submit">Insert Vendor</button>
+                            </form>
+    </center>
+</body>
+{% endblock %}

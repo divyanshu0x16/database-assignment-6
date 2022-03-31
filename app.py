@@ -220,16 +220,17 @@ def passengers():
         coach= temp['coach']
         status= temp['status']
         dot= temp['date_of_travel']
-
         try:
             cur.execute("INSERT INTO passenger VALUES(%s, %s, %s, %s)", (aadhar, first_name, last_name, dob))
             cur.execute("INSERT INTO transact VALUES(%s, %s, %s,%s,%s)", (transaction_id,mode_of_payment,amount,date_of_payment,aadhar))
             cur.execute("INSERT INTO ticket VALUES(%s, %s, %s,%s, %s, %s, %s)", (aadhar, train_id, transaction_id, seat_no, coach, status, dot))
+        
+            
         except:
-            cur.execute("UPDATE ticket SET aadhar_no = %s, train_id = %s, transaction_id = %s, seat_no = %s, coach_no = %s,ticket_status=%s,date_of_travel=%s WHERE aadhar_no = %s", (aadhar,train_id,transaction_id,seat_no,coach,status,dot,aadhar))
-            cur.execute("UPDATE transact SET transaction_id = %s, mode_of_payment = %s, amount = %s,date_of_payment=%s WHERE transaction_id = %s", (transaction_id,mode_of_payment,amount,date_of_payment,transaction_id))
             cur.execute("UPDATE passenger SET aadhar_no = %s, first_name = %s, last_name = %s,dob=%s WHERE aadhar_no = %s", (aadhar, first_name, last_name, dob,aadhar))
-
+            cur.execute("UPDATE transact SET transaction_id = %s, mode_of_payment = %s, amount = %s,date_of_payment=%s,aadhar_no=%s WHERE transaction_id = %s", (transaction_id,mode_of_payment,amount,date_of_payment,aadhar,transaction_id))
+            cur.execute("UPDATE ticket SET aadhar_no = %s, train_id = %s, transaction_id = %s, seat_no = %s, coach_no = %s,ticket_status=%s,date_of_travel=%s WHERE aadhar_no = %s", (aadhar,train_id,transaction_id,seat_no,coach,status,dot,aadhar))       
+        
         mysql.connection.commit()
         cur.close()
         
@@ -253,6 +254,101 @@ def delete_passenger():
         cur.close()
 
         return redirect("/passengers")
+#code for vendors
+
+@app.route('/vendors', methods=['GET'])
+def vendordetails():
+    if request.method == 'GET':
+        cur = mysql.connection.cursor()
+        vendors = []
+        workers=[]
+        worker_phones=[]
+        stalls=[]
+        stall_owners=[]
+        if( cur.execute("SELECT * FROM worker") > 0 ):
+            workers= cur.fetchall()
+        if( cur.execute("SELECT * FROM worker_phone") > 0 ):
+            worker_phones= cur.fetchall()
+        if( cur.execute("SELECT * FROM vendor") > 0 ):
+            vendors= cur.fetchall()
+        if( cur.execute("SELECT * FROM stall") > 0 ):
+            stalls = cur.fetchall()
+        if( cur.execute("SELECT * FROM stall_owner") > 0 ):
+            stall_owners = cur.fetchall()
+        cur.close()   
+        return render_template('/vendor_details.html', workers=workers,worker_phones=worker_phones,vendors=vendors,stalls=stalls,stall_owners=stall_owners)
+    return render_template('/vendor_details.html', workers=workers,worker_phones=worker_phones,vendors=vendors,stalls=stalls,stall_owners=stall_owners) 
+
+@app.route('/vendors/insert', methods=['GET', 'POST'])
+def vendors(): 
+    
+    id = request.args.get('worker_id')
+
+    if request.method == 'POST':
+        cur = mysql.connection.cursor()
+
+        temp = request.form
+
+        worker_id= temp['worker_id']
+        job= temp['job']
+        num_employees= temp['num_employees']
+        
+        first_name= temp['first_name']
+        last_name= temp['last_name']
+        age_of_joining= temp['age_of_joining']
+        date_of_joining= temp['date_of_joining']
+        picture=temp['picture']
+        
+        phone_no=temp['phone_no']
+        phone_no = phone_no.split()
+        
+        stall_id=temp['stall_id']
+        stall_name=temp['stall_name']
+        platform_no=temp['platform_no']
+        try:
+            cur.execute("INSERT INTO worker VALUES(%s, %s, %s, %s, %s, %s)", (worker_id, first_name, last_name, age_of_joining, date_of_joining, picture))
+            cur.execute("INSERT INTO vendor VALUES(%s, %s, %s)", (worker_id, job, num_employees))
+            cur.execute("INSERT INTO stall VALUES(%s, %s, %s,%s)", (stall_id, stall_name,platform_no,worker_id))
+            cur.execute("INSERT INTO stall_owner VALUES(%s, %s)", (worker_id, stall_id))
+            for phone in phone_no:
+                cur.execute("INSERT INTO worker_phone VALUES(%s, %s)", (phone_no, worker_id))
+        except Exception as e:
+            if e.args[1][:15] != "Duplicate entry":
+                print(e.args[1][:15])
+                raise
+            cur.execute("UPDATE vendor SET worker_id = %s, job = %s, num_employees = %s WHERE worker_id = %s", (worker_id,job,num_employees,worker_id))
+            cur.execute("UPDATE stall SET stall_id = %s, stall_name = %s, platform_no = %s WHERE stall_id = %s", (stall_id,stall_name,platform_no,stall_id))
+            cur.execute("UPDATE stall_owner SET worker_id=%s,stall_id=%s WHERE worker_id=%s",(worker_id,stall_id,worker_id))
+            cur.execute("UPDATE worker SET worker_id = %s, first_name = %s, last_name = %s,age_at_joining=%s,date_at_joining=%s,picture=%s WHERE worker_id = %s", (worker_id, first_name, last_name, age_of_joining,date_of_joining,picture,worker_id))
+            #  first delete all then add new numbers
+            cur.execute("""DELETE FROM worker_phone WHERE worker_id = %s""", (id,))
+            for phone in phone_no:
+                cur.execute("INSERT INTO worker_phone VALUES(%s, %s)", (phone, worker_id))
+        mysql.connection.commit()
+        cur.close()
+        
+        return redirect('/vendors')
+    print(1)
+    return render_template('vendors_form.html')
+@app.route('/vendors/delete', methods=['GET'])
+def delete_vendor():
+    if request.method == 'GET':
+        cur = mysql.connection.cursor()
+
+        id = request.args.get('id')
+        print(id)
+        cur.execute("""DELETE FROM worker WHERE worker_id = %s""", (id,))
+        cur.execute("""DELETE FROM vendor WHERE worker_id = %s""", (id,))
+        cur.execute("""DELETE FROM stall WHERE worker_id= %s""", (id,))
+        cur.execute("""DELETE FROM stall_owner WHERE  worker_id= %s"""  , (id,))
+        
+    
+        mysql.connection.commit()
+        
+
+        cur.close()
+
+        return redirect("/vendors")
 
 if __name__=="__main__":
     app.run(debug=True)
